@@ -59,25 +59,42 @@
   // DONE: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
   Article.numWordsAll = () => {
     return Article.all.map(function(item) {
-      console.log(item.body.length);
-      return item.body.length;
+      console.log(item.body.split(' ').length);
+      return item.body.split(' ').length;
     }).reduce(function(a, b) {
       return a + b;
     });
   };
 
-  // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
+  // DONE: Chain together a `map` and a `reduce` call to produce an array of unique author names.
   Article.allAuthors = () => {
-    return Article.all.map().reduce();
+    return Article.all.map(function(item){
+      return item.author;
+    }).reduce(function(a,b){
+      if (a.indexOf(b) < 0 ) a.push(b);
+      return a;
+    },[]);
   };
 
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
-      // TODO: Transform each author string into an object with properties for
+      // DONE: Transform each author string into an object with properties for
       // the author's name, as well as the total number of words across all articles
       // written by the specified author.
-
-    })
+      var authorObject = new Object();
+      authorObject.name = author;
+      authorObject.words = Article.all.filter(function(item) {
+        if (item.author === author) {
+          return item;
+        }
+      }).map(function(item) {
+        return item.body.split(' ').length;
+      }).reduce(function(a, b){
+        return a + b;
+      });
+      console.log(authorObject);
+      return authorObject;
+    });
   };
 
   Article.truncateTable = callback => {
